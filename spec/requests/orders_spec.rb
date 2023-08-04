@@ -3,7 +3,23 @@
 require 'rails_helper'
 
 RSpec.describe 'Orders', type: :request do
+  let!(:admin_user) { create(:user, role: 'admin') }
+  let!(:normal_user) { create(:user, role: 'user') }
+
   describe 'GET /index' do
-    pending "add some examples (or delete) #{__FILE__}"
+    context 'when user is admin' do
+      it 'sdfasd' do
+        login(admin_user)
+
+      end
+    end
+
+    context 'when user is not admin' do
+
+    end
+
+    context 'with invalid params' do
+
+    end
   end
 end
