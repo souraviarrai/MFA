@@ -8,7 +8,7 @@ RSpec.describe 'Orders', type: :request do
 
   describe 'GET /index' do
     context 'when user is admin' do
-      it 'sdfasd' do
+      it 'proper test description' do
         login(admin_user)
 
       end
