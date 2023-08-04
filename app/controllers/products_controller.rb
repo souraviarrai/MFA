@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class ProductsController < ApplicationController
   def index
+    binding.pry
     @products = Product.all
     render json: @products
   end
