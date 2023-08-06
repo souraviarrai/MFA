@@ -2,25 +2,61 @@
 
 class OutletsController < ApplicationController
   def index
-    @outlets = Outlet.all
-    render json: @outlets
-  end
-
+    @active_outlet = Outlet.where(status:"accepted")
+    render json: @active_outlet
+    end
   def show
     @outlet = Outlet.find(params[:id])
-    render json: @outlet
+    if @outlet.status == "pending"
+      render :body => "outlet #{@outlet.id} is in pending",:status => 404
+    else
+      render json: @outlet
+    end
+  end
+  def pending
+    @inactive_outlets = Outlet.where(status: "pending")
+    render json: @inactive_outlets
+  end
+  def pending_show
+    @inactive_outlet = Outlet.find(params[:id])
+    if @inactive_outlet.status == 'pending'
+      render json: @inactive_outlet
+    else
+      render :status => 404
+    end
+
+  end
+  def accept
+    @inactive_outlet = Outlet.find(params[:id])
+    if @inactive_outlet.status == 'pending'
+      @inactive_outlet.accepted!
+      render json: @inactive_outlet, :status => 200
+    end
+  end
+  def reject
+    @inactive_outlet = Outlet.find(params[:id])
+    if @inactive_outlet.status == 'pending'
+      @inactive_outlet.destroy
+      render :body => "The outlet has been rejected and deleted.", :status => 200
+    else
+      render :bod => "The outlet cannot be rejected and deleted as it's not in the pending request", :status => 422
+    end
   end
   def new
     @outlet = Outlet.new
   end
   def create
     @outlet = Outlet.new(outlet_params)
-
-    if @outlet.save
-      render json: @outlet, status: :ok
-    else
-      render status: :unprocessable_entity
+    if current_user.role == 'admin' || current_user.role == 'oadmin'
+      if !@outlet.valid?
+        error_messages = @outlet.error.full_messages
+        render json: error_messages, status: 422
+      else
+        @outlet.save
+        render json: @outlet, status: :ok
+      end
     end
+
   end
 
   def destroy
@@ -33,6 +69,6 @@ class OutletsController < ApplicationController
   private
 
   def outlet_params
-    params.require(:outlet).permit(:name, :user_id)
+    params.require(:outlet).permit(:name, :user_id, :location)
   end
 end

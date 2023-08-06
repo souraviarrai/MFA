@@ -8,6 +8,6 @@ module JsonHelper
 
   def login(user)
     binding.pry
-    post '/signin', params: { user: { email: user.email, password: user.password} }
+    post '/signin', params: { user: { email: user.email, password: user.password } }
   end
 end

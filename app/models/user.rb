@@ -10,7 +10,7 @@ class User < ApplicationRecord
     user: 2
   }
 
-  has_one :outlet
+  has_many :outlets
   has_many :orders
 
   before_validation :normalize_email
@@ -21,7 +21,6 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, allow_blank: true
   validates :role, presence: true
 
-
   def normalize_email
     self.email = email.to_s.strip.downcase
   end
@@ -31,9 +30,6 @@ class User < ApplicationRecord
   end
 
   after_initialize do
-    if self.new_record?
-      self.role ||= :admin
-    end
+    self.role ||= :admin if new_record?
   end
-
 end

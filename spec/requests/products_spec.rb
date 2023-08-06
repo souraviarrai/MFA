@@ -13,20 +13,18 @@ RSpec.describe 'Products', type: :request do
       end
       context 'with valid parameters' do
         let(:valid_params) do
-          { product: { name: Faker::Company.bs , description: Faker::Address.full_address } }
+          { product: { name: Faker::Company.bs, description: Faker::Address.full_address } }
         end
         it 'creates the new product' do
           expect { post '/products', params: valid_params }.to change(Product, :count).by(1)
-
-
         end
         it 'responds true if the given params and recived params are same' do
           binding.pry
           post '/products', params: valid_params
           expect(json).to have_attributes(
-                            name: valid_params[:product][:name],
-                            description: valid_params[:product][:description]
-                          )
+            name: valid_params[:product][:name],
+            description: valid_params[:product][:description]
+          )
         end
         it 'responds with status ok' do
           post '/products', params: valid_params
@@ -36,10 +34,10 @@ RSpec.describe 'Products', type: :request do
 
       context 'with invalid parameters' do
         let(:invalid_params) do
-          {product: {name: '', description: 'des'}}
+          { product: { name: '', description: 'des' } }
         end
         it 'creates it does not create new product' do
-          expect { post '/products', params: invalid_params}.not_to change(Product, :count)
+          expect { post '/products', params: invalid_params }.not_to change(Product, :count)
         end
         it 'render error message as JSON' do
           post '/products', params: invalid_params
@@ -60,7 +58,7 @@ RSpec.describe 'Products', type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
       it 'does not create a new product' do
-        expect{post '/products', params: valid_params}.not_to change(Product, :count)
+        expect { post '/products', params: valid_params }.not_to change(Product, :count)
       end
     end
   end

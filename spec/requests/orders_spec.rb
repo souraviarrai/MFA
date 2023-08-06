@@ -10,16 +10,13 @@ RSpec.describe 'Orders', type: :request do
     context 'when user is admin' do
       it 'proper test description' do
         login(admin_user)
-
       end
     end
 
     context 'when user is not admin' do
-
     end
 
     context 'with invalid params' do
-
     end
   end
 end

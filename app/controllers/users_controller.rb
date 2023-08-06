@@ -11,6 +11,7 @@ class UsersController < ApplicationController
       render json: { errors: user.errors }, status: :unprocessable_entity
     end
   end
+
   def signin
     @user = User.find_by(email: user_params2[:email])
     if @user && @user.password == user_params2[:password]
@@ -20,6 +21,7 @@ class UsersController < ApplicationController
       render status: :unauthorized
     end
   end
+
   def logout
     session[:user_auth_token] = nil
     render status: :no_content
@@ -28,8 +30,9 @@ class UsersController < ApplicationController
   private
 
   def user_params2
-    params.require(:user).permit(:email,:password)
+    params.require(:user).permit(:email, :password)
   end
+
   def user_params
     params.require(:user).permit(:name, :email, :password, :status)
   end

@@ -5,6 +5,7 @@ class OutletProductsController < ApplicationController
     @ops = OutletProduct.all
     render json: @ops
   end
+
   def show
     @op = Outlet.find(params[:id])
     render json: @op

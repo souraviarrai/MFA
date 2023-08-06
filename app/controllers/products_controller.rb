@@ -1,18 +1,21 @@
 # frozen_string_literal: true
+
 class ProductsController < ApplicationController
   def index
     binding.pry
     @products = Product.all
     render json: @products
   end
+
   def show
     @product = Product.find(params[:id])
     render json: @product
-
   end
+
   def new
     @product = Product.new
   end
+
   def create
     binding.pry
     @product = Product.new(product_params)
@@ -38,8 +41,8 @@ class ProductsController < ApplicationController
   end
 
   private
+
   def product_params
     params.require(:product).permit(:name, :description, :price, :quantity)
   end
-
 end

@@ -22,6 +22,4 @@ class ApplicationController < ActionController::API
   def current_user
     User.find_by(auth_token: session[:user_auth_token])
   end
-
-
 end
