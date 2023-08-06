@@ -56,6 +56,7 @@ group :development, :test do
   gem 'pry'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'letter_opener'
 end
 
 group :development do

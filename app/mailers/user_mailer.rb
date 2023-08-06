@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-class UserMailer < ApplicationMailer
-  default from: 'sourav@gmail.com'
+# app/mailers/user_mailer.rb
 
-  def welcome
-    @user = params[:user]
-    @url = 'http://localhost/3000'
-    mail(to: @user.email, subject: 'welcome to MFA please signup')
+class UserMailer < ApplicationMailer
+  default from: 'souravdungbungrai@gmail.com'
+  def invite_email(email, name)
+    @name = name
+    mail(to: email, subject: "Dear #{@name}, Invitation to Join Our Platform(MFA)")
   end
 end
+

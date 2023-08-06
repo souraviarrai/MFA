@@ -39,7 +39,16 @@ class OutletsController < ApplicationController
       @inactive_outlet.destroy
       render :body => "The outlet has been rejected and deleted.", :status => 200
     else
-      render :bod => "The outlet cannot be rejected and deleted as it's not in the pending request", :status => 422
+      render :body => "The outlet cannot be rejected and deleted as it's not in the pending request", :status => 422
+    end
+  end
+  def inivte_outlet_admins
+    if current_user.role == 'admin'
+      @new_user = email_params
+      UserMailer.invite_email(@new_user[:email], @new_user[:name]).deliver_now
+      render :body => 'Invitation email sent successfully', status: :created
+    else
+      render :body => 'you can not invite as you are not the admin', status: 422
     end
   end
   def new
@@ -70,5 +79,8 @@ class OutletsController < ApplicationController
 
   def outlet_params
     params.require(:outlet).permit(:name, :user_id, :location)
+  end
+  def email_params
+    params.require(:outlet).permit(:email, :name)
   end
 end
