@@ -4,7 +4,13 @@ class User < ApplicationRecord
   before_save :set_token
   VER = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
 
-  has_one :outlet
+  enum status: {
+    admin: 0,
+    oadmin: 1,
+    user: 2
+  }
+
+  has_many :outlets
   has_many :orders
 
   before_validation :normalize_email
@@ -21,5 +27,9 @@ class User < ApplicationRecord
 
   def set_token
     self.auth_token = "Auth#{rand(1..5000)}"
+  end
+
+  after_initialize do
+    self.role ||= :admin if new_record?
   end
 end

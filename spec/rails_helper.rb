@@ -5,7 +5,7 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
-abort('The Rails environment is running in production mode!') if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production? || Rails.env.development?
 require 'rspec/rails'
 require 'database_cleaner'
 
@@ -64,8 +64,6 @@ RSpec.configure do |config|
 
   # helper for user sign in
   config.include JsonHelper
-
-  config.include RequestSpecHelper, type: :request
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
