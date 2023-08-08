@@ -9,4 +9,3 @@ class UserMailer < ApplicationMailer
     mail(to: email, subject: "Dear #{@name}, Invitation to Join Our Platform(MFA)")
   end
 end
-

@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   put '/outlets/pending/accept/:id', to: 'outlets#accept'
   delete '/outlets/pending/reject/:id', to: 'outlets#reject'
   post '/outlets/email_invite', to: 'outlets#inivte_outlet_admins'
+  get '/outlet/:id/products', to: 'outlet_products#index'
+  post '/order', to: 'orders#create'
+  get '/order_list', to: 'orders#index'
   post '/signin', to: 'users#signin'
   post '/logout', to: 'users#logout'
 end

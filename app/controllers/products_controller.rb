@@ -2,7 +2,6 @@
 
 class ProductsController < ApplicationController
   def index
-    binding.pry
     @products = Product.all
     render json: @products
   end
@@ -17,7 +16,6 @@ class ProductsController < ApplicationController
   end
 
   def create
-    binding.pry
     @product = Product.new(product_params)
     if current_user.role == 'admin'
       if !@product.valid?

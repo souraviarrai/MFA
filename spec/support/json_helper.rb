@@ -2,8 +2,7 @@
 
 module JsonHelper
   def json
-    binding.pry
-    OpenStruct.new(JSON.parse(response.body))
+    JSON.parse(response.body)
   end
 
   def login(user)
