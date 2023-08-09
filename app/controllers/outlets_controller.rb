@@ -1,44 +1,63 @@
 # frozen_string_literal: true
 
 class OutletsController < ApplicationController
+  require_relative '../services/outlet_index'
+
+  REQUEST = ['accept','reject']
   def index
-    @active_outlet = Outlet.where(status: 'accepted')
-    render json: @active_outlet
+    if current_user == 'admin'
+      result_index = ::Services::OutletIndex.new(params: { status: params[:status] }).call
+
+      render json: result_index[:json], status: result_index[:status]
+    else
+
+      render body: 'No content to show', status: 401
+    end
   end
 
   def show
     @outlet = Outlet.find(params[:id])
-    if @outlet.status == 'pending'
-      render body: "outlet #{@outlet.id} is in pending", status: 404
-    else
-      render json: @outlet
-    end
-  end
-
-  def pending
-    @inactive_outlets = Outlet.where(status: 'pending')
-    render json: @inactive_outlets
-  end
-
-  def pending_show
-    inactive_outlet = Outlet.find(params[:id])
-    if inactive_outlet
-      if inactive_outlet.status == 'pending'
-        render json: inactive_outlet
+    if @outlet
+      if @outlet.status == 'pending'
+        render body: "outlet #{@outlet.name} is pending", status: 404
       else
-        render :body => 'The outlet is already accepted'
+        render json: @outlet
       end
     end
   rescue ActiveRecord::RecordNotFound => e
-    render json: 'Not Found', status: :not_found
+    render json: 'Not found', status: 404
   end
+
+  # def pending
+  #   if params[:id].present?
+  #     inactive_outlet = Outlet.find(params[:id])
+  #     if inactive_outlet.status == 'pending'
+  #       render json: inactive_outlet, status: 200
+  #       if params[:request] == 'accept'
+  #         inactive_outlet.accepted!
+  #         render json: inactive_outlet, status: 200
+  #       elsif params[:request] == 'reject'
+  #         inactive_outlet.destroy
+  #         render json: "The outle has been rejected and deleted", status: 200
+  #       end
+  #     else
+  #       render json: 'The outlet is already accepted', status: 200
+  #     end
+  #   else
+  #
+  #   end
+  # rescue ActiveRecord::RecordNotFound => e
+  #   render json: "record with the id #{params[:id]} not found"
+  # end
+
 
   def accept
     @inactive_outlet = Outlet.find(params[:id])
     return unless @inactive_outlet.status == 'pending'
-
     @inactive_outlet.accepted!
     render json: @inactive_outlet, status: 200
+  rescue ActiveRecord::RecordNotFound => e
+    render json: "record with the particular id  not found"
   end
 
   def reject
@@ -49,6 +68,8 @@ class OutletsController < ApplicationController
     else
       render body: "The outlet cannot be rejected and deleted as it's not in the pending request", status: 422
     end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: "record with the particular id  not found"
   end
 
   def inivte_outlet_admins
